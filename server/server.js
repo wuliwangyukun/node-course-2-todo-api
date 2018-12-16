@@ -20,7 +20,7 @@ app.post('/todos', (req, res) => {
     todo.save().then(doc => {
         res.send(doc);
     }, err => {
-        res.status(400).send(e)
+        res.status(400).send(err)
     })
 });
 
@@ -28,22 +28,6 @@ app.listen(3000, () => {
     console.log('Started on port 3000');
 })
 
-// var newTodo = new Todo({
-//     text: ' something to do  '
-// });
-
-// newTodo.save().then(doc => {
-//     console.log(doc)
-// }, err => {
-//     console.log('save newTodo failed');
-// })
-
-// var newUser = new User({
-//     email: 'baby@qq.com'
-// })
-
-// newUser.save().then(doc => {
-//     console.log(JSON.stringify(doc, undefined, 2));
-// }, err => {
-//     console.log('Unable to save user', err)
-// })
+module.exports = {
+    app
+}
