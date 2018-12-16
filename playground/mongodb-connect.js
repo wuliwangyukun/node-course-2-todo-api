@@ -14,6 +14,7 @@ MongoClient.connect('mongodb://localhost:27017/TodoApp', (err, client) => {
     const db = client.db('TodoApp');
 
     // 在Todos中添加一个document，如果没有Todos collection就先创建这个collection
+    // 会自带一个_id属性作为默认的唯一标识符，也可以手动添加_id属性（不推荐）
     // db.collection('Todos').insertOne({
     //     text: 'something to do',
     //     completed: true
@@ -40,5 +41,4 @@ MongoClient.connect('mongodb://localhost:27017/TodoApp', (err, client) => {
 });
 
 // ps:
-// collection._id = new ObjectID('5c14b6b5ca47d805061961fc') === '5c14b6b5ca47d805061961fc'
-// collection的id也可以手动指定
+// document的默认_id属性，可以使用getTimestamp方法得到时间戳。
