@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 
-mongoose.connect('mongodb://localhost:27017/TodoApp2');
+mongoose.connect(process.env.MONGODB_URL);
 
 module.exports = {
     mongoose
