@@ -1,8 +1,9 @@
-var {
+const {
     ObjectID
 } = require('mongodb');
-var express = require('express');
-var bodyParser = require('body-parser');
+const express = require('express');
+const bodyParser = require('body-parser');
+const _ = require('lodash');
 
 var {
     Todo
@@ -42,15 +43,15 @@ app.get('/todos', (req, res) => {
 app.get('/todos/:id', (req, res) => {
     let id = req.params.id;
     if (!ObjectID.isValid(id)) {
-        return res.status(404).send('page not found');
+        return res.status(404).send('404 not found');
     }
     Todo.findById(id).then(todo => {
-        if (todo) {
-            return res.send({
-                todo
-            })
+        if (!todo) {
+            return res.status(404).send('empty body')
         }
-        return res.status(404).send('empty body')
+        return res.send({
+            todo
+        })
     }).catch(e => res.status(400).send(e))
 })
 
@@ -60,13 +61,39 @@ app.delete('/todos/:id', (req, res) => {
         return res.status(404).send('404 not found')
     };
     Todo.findByIdAndRemove(id).then(todo => {
-        if (todo) {
-            return res.status(200).send({
-                todo
-            })
+        if (!todo) {
+            res.status(404).send('empty body')
         }
-        res.status(404).send('empty body')
+        return res.status(200).send({
+            todo
+        })
     }).catch(e => res.status(400).send(e))
+});
+
+app.patch('/todos/:id', (req, res) => {
+    let id = req.params.id;
+    let body = _.pick(req.body, ['text', 'completed']);
+    if (!ObjectID.isValid(id)) {
+        return res.status(404).send('404 not found');
+    }
+    if (_.isBoolean(body.completed) && body.completed) {
+        body.completedAt = new Date().getTime();
+    } else {
+        body.completed = false;
+        body.completedAt = null;
+    }
+    Todo.findByIdAndUpdate(id, {
+        $set: body
+    }, {
+        new: true
+    }).then(todo => {
+        if (!todo) {
+            res.status(404).send('empty body');
+        }
+        res.send({
+            todo
+        });
+    }).catch(e => res.status(400).send())
 })
 
 app.listen(3000, () => {
