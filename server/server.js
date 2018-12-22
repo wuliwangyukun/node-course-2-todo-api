@@ -11,6 +11,9 @@ var {
 var {
     User
 } = require('../models/user');
+var {
+    authenticate
+} = require('../middleware/authenticate');
 
 var app = express();
 var port = process.env.PORT;
@@ -109,6 +112,20 @@ app.post('/users', (req, res) => {
         })
         .catch(e => res.status(400).send(e))
 });
+
+// GET private route
+app.get('/users/me', authenticate, (req, res) => {
+    // let token = req.header('x-auth');
+
+    // User.findByToken(token).then(user => {
+    //     if (!user) {
+    //         res.status(401).send();
+    //     }
+    //     res.status(200).send(user)
+    // }).catch(e => res.status(401).send());
+    // 使用了middleware
+    res.status(200).send(req.user);
+})
 
 app.listen(port, () => {
     console.log(`Started on port ${port}`);

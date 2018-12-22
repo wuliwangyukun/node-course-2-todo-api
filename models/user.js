@@ -5,7 +5,8 @@ const validator = require('validator');
 const jwt = require('jsonwebtoken');
 const _ = require('lodash');
 
-var userSchema = new mongoose.Schema({
+var Schema = mongoose.Schema;
+var userSchema = new Schema({
     email: {
         type: String,
         required: true,
@@ -34,6 +35,10 @@ var userSchema = new mongoose.Schema({
     }]
 })
 
+// 添加实例方法：new User()
+// userSchema.methods 
+// NOTE: 在使用mongoose.model() 编译模式之前， 必须将方法添加到模式中
+
 // 过滤返回的信息
 userSchema.methods.toJSON = function () {
     let user = this;
@@ -48,7 +53,7 @@ userSchema.methods.generateAuthToken = function () {
     let token = jwt.sign({
         _id: user._id.toHexString(),
         access
-    }, 'web secret').toString();
+    }, 'my secret').toString();
 
     // 更改user model
     user.tokens = user.tokens.concat([{
@@ -59,6 +64,24 @@ userSchema.methods.generateAuthToken = function () {
     // 保存更改
     return user.save().then(() => {
         return token;
+    })
+}
+
+// 添加静态方法
+userSchema.statics.findByToken = function (token) {
+    let User = this;
+    let decode;
+
+    try {
+        decode = jwt.verify(token, 'my secret');
+    } catch {
+        return Promise.reject();
+    }
+
+    return User.findOne({
+        '_id': decode._id,
+        'tokens.token': token,
+        'tokens.access': 'auth',
     })
 }
 
