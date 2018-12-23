@@ -102,6 +102,7 @@ app.patch('/todos/:id', (req, res) => {
 
 // POST /users
 app.post('/users', (req, res) => {
+    // 选择有用的信息
     let body = _.pick(req.body, ['email', 'password']);
     let user = new User(body);
 
@@ -113,7 +114,7 @@ app.post('/users', (req, res) => {
         .catch(e => res.status(400).send(e))
 });
 
-// GET private route
+// GET /users/me private route
 app.get('/users/me', authenticate, (req, res) => {
     // let token = req.header('x-auth');
 
