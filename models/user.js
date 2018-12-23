@@ -87,8 +87,10 @@ userSchema.statics.findByToken = function (token) {
 }
 
 // middleware
+// user.save() 的中间件
 userSchema.pre('save', function (next) {
     let user = this;
+    //password改变，重新生成hash过后的password并保存
     if (user.isModified('password')) {
         bcrypt.genSalt(10, (err, salt) => {
             bcrypt.hash(user.password, salt, (err, hash) => {
