@@ -40,8 +40,7 @@ app.get('/todos', authenticate, (req, res) => {
         _creator: req.user._id
     }).then(todos => {
         res.send({
-            body: todos,
-            code: 200
+            todos,
         })
     }, err => {
         res.status(400).send(111)
