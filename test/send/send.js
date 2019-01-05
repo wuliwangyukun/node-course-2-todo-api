@@ -27,7 +27,14 @@ let users = [{
 }, {
     _id: userTwoID,
     email: 'userTwo@example.com',
-    password: 'userTwoPassword'
+    password: 'userTwoPassword',
+    tokens: [{
+        access: 'auth',
+        token: jwt.sign({
+            _id: userTwoID,
+            access: 'auth'
+        }, 'my secret').toString()
+    }]
 }];
 
 let populateUsers = (done) => {

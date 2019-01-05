@@ -56,7 +56,7 @@ userSchema.methods.generateAuthToken = function () {
         access
     }, 'my secret').toString();
 
-    // 更改user model
+    // 更改user model  增加tokens成员
     user.tokens = user.tokens.concat([{
         access,
         token
