@@ -42,11 +42,13 @@ let populateUsers = (done) => {
 let todos = [{
     _id: new ObjectID(),
     text: 'first test todos',
+    _creator: userOneID
 }, {
     _id: new ObjectID(),
     text: 'second test todos',
     completed: false,
-    completedAt: 222
+    completedAt: 222,
+    _creator: userTwoID
 }];
 
 let populateTodos = (done) => {
