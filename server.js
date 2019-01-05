@@ -5,6 +5,7 @@ const {
 const express = require('express');
 const bodyParser = require('body-parser');
 const _ = require('lodash');
+const bcrypt = require('bcryptjs');
 var {
     Todo
 } = require('./models/todo');
@@ -126,6 +127,28 @@ app.get('/users/me', authenticate, (req, res) => {
     // }).catch(e => res.status(401).send());
     // 使用了middleware
     res.status(200).send(req.user);
+})
+
+app.post('/users/login', (req, res) => {
+    let {
+        email,
+        password
+    } = _.pick(req.body, ['email', 'password']);
+    console.log('email, password', email, password);
+    User.findByCredentials(email, password).then(user => {
+            return user.generateAuthToken().then(token => {
+                res.header('x-auth', token).send(user)
+            })
+        })
+        .catch(e => res.status(400).send())
+});
+
+app.delete('/users/me/token', authenticate, (req, res) => {
+    req.user.removeToken(req.token).then(() => {
+        res.status(200).send();
+    }, () => {
+        res.status(400).send();
+    })
 })
 
 app.listen(port, () => {
