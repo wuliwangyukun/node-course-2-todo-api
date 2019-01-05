@@ -54,7 +54,7 @@ userSchema.methods.generateAuthToken = function () {
     let token = jwt.sign({
         _id: user._id.toHexString(),
         access
-    }, 'my secret').toString();
+    }, process.env.JWT_SECRET).toString();
 
     // 更改user model  增加tokens成员
     user.tokens = user.tokens.concat([{
@@ -85,7 +85,7 @@ userSchema.statics.findByToken = function (token) {
     let decode;
 
     try {
-        decode = jwt.verify(token, 'my secret');
+        decode = jwt.verify(token, process.env.JWT_SECRET);
     } catch {
         return Promise.reject();
     }

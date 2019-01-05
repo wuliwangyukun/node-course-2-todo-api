@@ -22,7 +22,7 @@ let users = [{
         token: jwt.sign({
             _id: userOneID,
             access: 'auth'
-        }, 'my secret').toString()
+        }, process.env.JWT_SECRET).toString()
     }]
 }, {
     _id: userTwoID,
@@ -33,7 +33,7 @@ let users = [{
         token: jwt.sign({
             _id: userTwoID,
             access: 'auth'
-        }, 'my secret').toString()
+        }, process.env.JWT_SECRET).toString()
     }]
 }];
 
